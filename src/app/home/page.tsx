@@ -282,7 +282,7 @@ export default function HomePage() {
       <PdfModal
         isOpen={isPdfModalOpen}
         onClose={() => setIsPdfModalOpen(false)}
-        pdfUrl="/papers/chi26h-sub1796-cam-i61.pdf"
+        pdfUrl="https://github.com/KikiSpace/chi-meetup-site/blob/main/chi26h-sub1796-cam-i61.pdf?raw=true"
         title="Workshop Proposal"
       />
     </div>
