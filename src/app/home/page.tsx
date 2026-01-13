@@ -8,6 +8,7 @@ import { Button } from '@/components/Button';
 import { Callout } from '@/components/Callout';
 import { KeyQuestionsPopover } from '@/components/KeyQuestionsPopover';
 import { PdfModal } from '@/components/PdfModal';
+import { getAssetUrl } from '@/lib/constants';
 import { ExternalLink, Sparkles } from 'lucide-react';
 
 const organizers = [
@@ -282,7 +283,7 @@ export default function HomePage() {
       <PdfModal
         isOpen={isPdfModalOpen}
         onClose={() => setIsPdfModalOpen(false)}
-        pdfUrl="https://github.com/KikiSpace/chi-meetup-site/blob/main/chi26h-sub1796-cam-i61.pdf?raw=true"
+        pdfUrl={getAssetUrl('papers/chi26h-sub1796-cam-i61.pdf')}
         title="Workshop Proposal"
       />
     </div>

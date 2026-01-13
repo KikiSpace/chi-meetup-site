@@ -141,7 +141,20 @@ export function PdfModal({ isOpen, onClose, pdfUrl, title = 'Document' }: PdfMod
             className="w-full h-full"
             title={title}
             style={{ border: 'none' }}
-          />
+          >
+            {/* Fallback for browsers that don't support iframe embedding */}
+            <p className="p-6 text-center text-secondary">
+              Your browser doesn't support embedded PDFs.{' '}
+              <a
+                href={pdfUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-accent hover:underline"
+              >
+                Click here to open the PDF in a new tab.
+              </a>
+            </p>
+          </iframe>
         </div>
       </div>
     </div>
