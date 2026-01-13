@@ -61,6 +61,96 @@ Run the production server:
 pnpm start
 ```
 
+## Deployment to GitHub Pages
+
+This site is configured for deployment to GitHub Pages using GitHub Actions.
+
+### Prerequisites
+
+1. A GitHub repository named `chi-meetup-site` (or update `REPO_NAME` in `next.config.ts`)
+2. GitHub Pages enabled in repository settings
+
+### Configuration
+
+The repository name is configured in `next.config.ts`:
+
+```typescript
+const REPO_NAME = "chi-meetup-site";
+```
+
+**To deploy to a different repository name:**
+1. Update the `REPO_NAME` constant in `next.config.ts`
+2. Commit and push the changes
+
+### GitHub Repository Settings
+
+After pushing your code to GitHub, enable GitHub Pages:
+
+1. Go to your repository on GitHub
+2. Click **Settings** > **Pages** (in the left sidebar)
+3. Under **Source**, select:
+   - **Source**: GitHub Actions
+4. Save the settings
+
+### Deployment Process
+
+The site automatically deploys when you push to the `main` branch:
+
+1. **Commit your changes:**
+   ```bash
+   git add .
+   git commit -m "Your commit message"
+   ```
+
+2. **Push to main:**
+   ```bash
+   git push origin main
+   ```
+
+3. **Monitor deployment:**
+   - Go to the **Actions** tab in your GitHub repository
+   - Watch the "Deploy to GitHub Pages" workflow
+   - Once complete, your site will be live at:
+     ```
+     https://<your-username>.github.io/chi-meetup-site/
+     ```
+
+### Manual Deployment
+
+You can also trigger deployment manually:
+
+1. Go to **Actions** tab in your repository
+2. Select "Deploy to GitHub Pages" workflow
+3. Click "Run workflow" > "Run workflow"
+
+### Local Testing of Production Build
+
+To test the production build locally before deploying:
+
+```bash
+# Build the static export
+pnpm build
+
+# The output will be in the 'out' directory
+# You can serve it locally with any static server, e.g.:
+npx serve out
+```
+
+### Troubleshooting
+
+**404 errors on page refresh:**
+- Next.js static export with custom routing is handled by the `not-found.tsx` page
+- Links should work correctly with the basePath configuration
+
+**Images not loading:**
+- Verify images are in the `public` directory
+- Check that image paths don't include the basePath manually (Next.js handles this automatically)
+
+**Base path issues:**
+- The `basePath` is automatically applied in production
+- In development (`pnpm dev`), the site runs at the root path without basePath
+- Update `REPO_NAME` in `next.config.ts` if your repository name differs
+
 ## Project Structure
 
 ```
