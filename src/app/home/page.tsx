@@ -135,15 +135,26 @@ export default function HomePage() {
 
             {/* Teaser Image + Caption */}
             <div className="mb-16">
-              <div className="relative w-full max-w-2xl mx-auto mb-6">
-                {/* Using absolute GitHub raw URL to avoid basePath/static export issues on GitHub Pages */}
+              <div className="relative w-full max-w-2xl mx-auto mb-6" style={{ minHeight: '150px' }}>
+                {/* Using GitHub URL with ?raw=true to ensure proper loading on GitHub Pages */}
                 <img
-                  src="https://raw.githubusercontent.com/KikiSpace/chi-meetup-site/main/assets/4x4.png"
-                  alt="Visual diagram showing the shift from traditional UI prototyping (with distinct handoff between design and development) to generative AI-enabled prototyping (with overlapping design and development through AI mediation)"
-                  width={1436}
-                  height={322}
-                  className="w-full h-auto rounded-lg"
-                  style={{ background: 'transparent' }}
+                  src="https://github.com/KikiSpace/chi-meetup-site/blob/main/assets/4x4.png?raw=true"
+                  alt="Teaser figure: Generative Design and Vibe Coding paradigms"
+                  onError={(e) => {
+                    // Fallback to raw.githubusercontent.com if GitHub blob URL fails
+                    e.currentTarget.src = 'https://raw.githubusercontent.com/KikiSpace/chi-meetup-site/main/assets/4x4.png';
+                    e.currentTarget.onerror = null; // Prevent infinite loop
+                  }}
+                  className="w-full h-auto rounded-lg block"
+                  style={{
+                    width: '100%',
+                    height: 'auto',
+                    maxWidth: '100%',
+                    background: 'transparent',
+                    display: 'block',
+                    visibility: 'visible',
+                    opacity: 1
+                  }}
                 />
               </div>
               <p className="text-sm text-secondary text-center max-w-2xl mx-auto leading-relaxed">
