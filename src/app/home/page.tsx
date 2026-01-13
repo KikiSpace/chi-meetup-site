@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import Image from 'next/image';
 import { FloatingSectionNav } from '@/components/FloatingSectionNav';
 import { FullScreenSection } from '@/components/FullScreenSection';
 import { OrganizerCard } from '@/components/OrganizerCard';
@@ -137,15 +136,14 @@ export default function HomePage() {
             {/* Teaser Image + Caption */}
             <div className="mb-16">
               <div className="relative w-full max-w-2xl mx-auto mb-6">
-                <Image
-                  src="/images/4x4.png"
+                {/* Using absolute GitHub raw URL to avoid basePath/static export issues on GitHub Pages */}
+                <img
+                  src="https://raw.githubusercontent.com/KikiSpace/chi-meetup-site/main/assets/4x4.png"
                   alt="Visual diagram showing the shift from traditional UI prototyping (with distinct handoff between design and development) to generative AI-enabled prototyping (with overlapping design and development through AI mediation)"
                   width={1436}
                   height={322}
                   className="w-full h-auto rounded-lg"
                   style={{ background: 'transparent' }}
-                  unoptimized
-                  priority
                 />
               </div>
               <p className="text-sm text-secondary text-center max-w-2xl mx-auto leading-relaxed">
