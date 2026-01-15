@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import { FloatingSectionNav } from '@/components/FloatingSectionNav';
 import { FullScreenSection } from '@/components/FullScreenSection';
 import { OrganizerCard } from '@/components/OrganizerCard';
-import { Button } from '@/components/Button';
 import { Callout } from '@/components/Callout';
 import { KeyQuestionsPopover } from '@/components/KeyQuestionsPopover';
 import { PdfModal } from '@/components/PdfModal';
@@ -17,54 +16,72 @@ const organizers = [
     role: 'PhD Student',
     affiliation: 'Santa Clara University, USA',
     email: 'xzhang22@scu.edu',
+    photo: 'https://media.licdn.com/dms/image/v2/D5603AQE8gGI0S1lGGQ/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1678269512299?e=1770249600&v=beta&t=6IpWAN3itYfZjTU8QaH95UwSwFKAsJxF_EMecNSNHeE',
+    bio: 'PhD student in the Human-Computer Interaction Lab at Santa Clara University. Research on how AI agents can support digital wellbeing and bridge technical gaps for novices; involved in the Bay Area hackathon community and hosting this meetup.',
   },
   {
     name: 'Hari Subramonyam',
     role: 'Assistant Professor',
     affiliation: 'Stanford University, USA',
     email: 'hari@stanford.edu',
+    photo: 'https://ed.stanford.edu/sites/default/files/styles/square_crop/public/faculty/cap/harihars.jpg?itok=3CxtHa1X',
+    bio: 'Assistant Professor (Research) at Stanford University. Works on cognitively informed design, co-design with learners/educators, and transformative AI-enabled learning experiences; advances responsible design tools and methods centered on ethics and human values.',
   },
   {
     name: 'Advait Sarkar',
     role: 'Researcher',
     affiliation: 'Microsoft Research, UK',
     email: 'advait@microsoft.com',
+    photo: 'https://advait.org/img/advait.jpg',
+    bio: 'Researcher at Microsoft and lecturer at University of Cambridge/UCL. Studies effects of Generative AI on knowledge work, productivity, and creativity; leads agenda on enhancing critical thinking with Generative AI; authored "AI Should Challenge, Not Obey."',
   },
   {
     name: 'Ian Drosos',
     role: 'Member of Technical Staff',
     affiliation: 'Trent AI, UK',
     email: 'ian@trent.ai',
+    photo: 'https://media.licdn.com/dms/image/v2/C5603AQEoI6Be3SVduA/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1657194676693?e=1770249600&v=beta&t=OhACm9XdfqmzJAO3Nna8uv9kkEehTLJnUNfdcFgT-rU',
+    bio: 'Member of Technical Staff at Trent AI; designs and develops UX for creating/steering AI agents for secure code and processes; focuses on generative UX while addressing risks of vibe coding and modern dev workflows.',
   },
   {
     name: 'Jack Wang',
     role: 'Researcher',
     affiliation: 'Adobe Research, USA',
     email: 'jackwa@adobe.com',
+    photo: 'https://zichaow.github.io/images/headshot-2.jpg',
+    bio: 'Researcher at Adobe Research focusing on human-centered AI/ML technologies for human learning, creativity, and productivity.',
   },
   {
     name: 'Kyungho Lee',
     role: 'Associate Professor',
     affiliation: 'UNIST, South Korea',
     email: 'kyungho@unist.ac.kr',
+    photo: 'https://scholar.googleusercontent.com/citations?view_op=view_photo&user=ln_in2cAAAAJ&citpid=2',
+    bio: 'Associate Professor at UNIST; directs the Expressive Computing Lab; explores AI as tool/material/medium for design, guiding AI development via human-centered values toward computational expression and human–AI co-creation.',
   },
   {
     name: 'Veronica Pimenova',
     role: 'PhD Student',
     affiliation: 'University of Michigan, USA',
     email: 'pimenova@umich.edu',
+    photo: 'https://lh3.googleusercontent.com/a-/ALV-UjUyipYh4-Ybrga-vTtWdoWxpdt2u-BMl5R7NKuk5h-ST6ggBoyr=s240-p-k-rw-no',
+    bio: 'PhD student at the University of Michigan School of Information; research on human factors of software engineering, focusing on AI tools for accessibility and developer productivity in workplace environments.',
   },
   {
     name: 'Xiang "Anthony" Chen',
     role: 'Associate Professor',
     affiliation: 'UCLA, USA',
     email: 'xac@ucla.edu',
+    photo: 'https://hci.prof/image/xac.jpg',
+    bio: 'Associate Professor at UCLA (ECE/CS). Human-centered interactive AI systems aligning with human values; multiple awards; 60+ publications with best paper awards/honorable mentions.',
   },
   {
     name: 'Kai Lukoff',
     role: 'Assistant Professor',
     affiliation: 'Santa Clara University, USA',
     email: 'klukoff@scu.edu',
+    photo: 'https://www.scu.edu/media/school-of-engineering/photos/faculty-staff/lukoff_headshot_looking_right---Kai-Lukoff.jpeg',
+    bio: 'Assistant Professor at Santa Clara University; research on human-centered AI design and implications for prototyping and user agency; teaches software engineering focusing on critically and creatively integrating AI tools in development workflows.',
   },
 ];
 
@@ -89,19 +106,19 @@ export default function HomePage() {
               </span>
             </div>
 
-            <h1 className="font-serif text-4xl md:text-6xl font-bold text-foreground mb-6 leading-tight">
+            {/* Main Headline */}
+            <h1 className="font-serif text-4xl md:text-6xl font-semibold text-foreground mb-6 leading-tight">
+              Generative Design & Vibe Coding
+            </h1>
+
+            {/* Secondary Subtitle */}
+            <p className="text-lg md:text-2xl text-secondary mb-6 leading-relaxed max-w-2xl mx-auto">
               Rethinking the{' '}
-              <span className="relative">
-                <span className="relative z-10">design</span>
-                <span className="absolute inset-0 bg-accent/10 -skew-y-1 rounded" aria-hidden="true"></span>
-              </span>
-              –
-              <span className="relative">
-                <span className="relative z-10">development</span>
-                <span className="absolute inset-0 bg-accent/10 -skew-y-1 rounded" aria-hidden="true"></span>
+              <span className="inline-block px-2 py-0.5 rounded bg-accent/10 text-foreground font-medium">
+                design–development
               </span>
               {' '}divide for UI prototyping
-            </h1>
+            </p>
 
             <p className="text-base md:text-lg text-secondary leading-relaxed max-w-2xl mx-auto mb-6">
               An interactive CHI 2026 meetup exploring how Gen-AI is reshaping prototyping across
@@ -116,7 +133,7 @@ export default function HomePage() {
               className="inline-flex items-center gap-2 text-sm text-secondary hover:text-accent transition-colors group"
             >
               <span className="underline decoration-1 underline-offset-4 group-hover:decoration-accent">
-                Read our Workshop Proposal
+                Read our Meetup Proposal
               </span>
               <span className="group-hover:translate-x-0.5 transition-transform">→</span>
             </button>
@@ -211,9 +228,16 @@ export default function HomePage() {
         {/* Section 3: Participate */}
         <FullScreenSection id="participate" variant="surface">
           <div className="max-w-2xl mx-auto text-center">
+            {/* Lead-in */}
+            <div className="inline-block mb-8">
+              <p className="text-xl md:text-2xl font-semibold text-foreground px-6 py-3 rounded-full bg-accent/10 border border-accent/20">
+                Participate our Designathon
+              </p>
+            </div>
+
             {/* Meetup Plan Narrative */}
             <p className="text-lg md:text-xl text-foreground leading-relaxed mb-8">
-              This will be a very exciting and first-ever Designathon Meetup for the CHI community.
+              This will be a very exciting Designathon Meetup for the CHI community.
               We're excited to host this event to connect researchers and casually build a research
               community around shared interests.
             </p>
@@ -255,7 +279,7 @@ export default function HomePage() {
               Stanford, Adobe, UCLA, Microsoft Research, and beyond.
             </p>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+            <div className="space-y-8 mb-16 max-w-5xl mx-auto">
               {organizers.map((organizer, index) => (
                 <OrganizerCard key={index} {...organizer} />
               ))}
@@ -269,11 +293,6 @@ export default function HomePage() {
                 Have questions, ideas, or want to contribute a tool demo? We'd love to hear from you.
                 Reach out to any of the organizers directly.
               </p>
-              <div className="text-center">
-                <Button href="/community" variant="secondary">
-                  Join the Community
-                </Button>
-              </div>
             </div>
           </div>
         </FullScreenSection>

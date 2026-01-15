@@ -79,12 +79,6 @@ export function SidebarNav() {
           <div className="pt-8 border-t border-border">
             <div className="space-y-2">
               <Link
-                href="/community"
-                className="block px-4 py-2 text-sm text-secondary hover:text-foreground transition-colors"
-              >
-                Community
-              </Link>
-              <Link
                 href="/updates"
                 className="block px-4 py-2 text-sm text-secondary hover:text-foreground transition-colors"
               >
@@ -141,13 +135,6 @@ export function SidebarNav() {
                 </button>
               ))}
               <div className="pt-4 border-t border-border space-y-2">
-                <Link
-                  href="/community"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="block px-4 py-3 text-sm text-secondary hover:text-foreground hover:bg-surface/50 rounded-lg transition-colors"
-                >
-                  Community
-                </Link>
                 <Link
                   href="/updates"
                   onClick={() => setIsMobileMenuOpen(false)}

@@ -1,4 +1,5 @@
 import React from 'react';
+import { TOTAL_SCROLL_OFFSET_PX, NAV_HEIGHT_PX } from '@/lib/nav-constants';
 
 interface FullScreenSectionProps {
   id: string;
@@ -36,6 +37,9 @@ export function FullScreenSection({
         ${variants[variant]}
         ${className}
       `.trim()}
+      style={{
+        scrollMarginTop: `${TOTAL_SCROLL_OFFSET_PX}px`,
+      }}
     >
       <div className="w-full max-w-5xl mx-auto px-6 md:px-12 py-12">
         {children}

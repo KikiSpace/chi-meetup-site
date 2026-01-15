@@ -1,7 +1,7 @@
 import React from 'react';
 import { Callout } from '@/components/Callout';
 import { Section } from '@/components/Section';
-import { Calendar, Megaphone } from 'lucide-react';
+import { Calendar } from 'lucide-react';
 
 const updates = [
   {
@@ -37,25 +37,6 @@ export default function UpdatesPage() {
             Latest announcements, calls for participation, and meetup news.
           </p>
         </div>
-      </Section>
-
-      {/* Subscribe Banner */}
-      <Section>
-        <Callout variant="accent" className="text-center">
-          <Megaphone className="text-accent mx-auto mb-4" size={32} />
-          <h2 className="font-semibold text-xl text-foreground mb-2">
-            Stay Updated
-          </h2>
-          <p className="text-secondary mb-4">
-            Subscribe to our mailing list to receive updates directly in your inbox.
-          </p>
-          <button
-            disabled
-            className="px-6 py-3 rounded-lg bg-foreground/10 text-secondary cursor-not-allowed opacity-50"
-          >
-            Subscribe (Coming Soon)
-          </button>
-        </Callout>
       </Section>
 
       {/* Updates Timeline */}
