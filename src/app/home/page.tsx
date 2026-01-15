@@ -85,12 +85,16 @@ const organizers = [
   },
 ];
 
+// Google Apps Script Web App URL
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby3cf2H8IRR_AuPfWT-oJW_zHszVbFGrna1V1J7vO0FT12R9Z_Ppss2ch1k-iovb2GS/exec';
+
 export default function HomePage() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [isPdfModalOpen, setIsPdfModalOpen] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<{ firstName?: string; lastName?: string; email?: string }>({});
   const [visibleActivities, setVisibleActivities] = useState<Set<number>>(new Set());
 
@@ -119,11 +123,37 @@ export default function HomePage() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (validateForm()) {
-      // Success - show message and clear form
+    if (!validateForm()) {
+      return;
+    }
+
+    // Prevent double submission
+    if (isSubmitting) {
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      // Send data to Google Sheets via Apps Script
+      const response = await fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors', // Required for Google Apps Script
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          firstName: firstName.trim(),
+          lastName: lastName.trim(),
+          email: email.trim(),
+        }),
+      });
+
+      // Note: With 'no-cors', we can't read the response, but the request will succeed
+      // Show success message and clear form
       setIsSubmitted(true);
       setFirstName('');
       setLastName('');
@@ -134,10 +164,35 @@ export default function HomePage() {
       setTimeout(() => {
         setIsSubmitted(false);
       }, 5000);
+
+    } catch (error) {
+      console.error('Form submission error:', error);
+      // Show error in the form
+      setErrors({
+        email: 'Submission failed. Please try again or contact us directly.',
+      });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  const isFormValid = firstName.trim() && lastName.trim() && email.trim() && validateEmail(email);
+  // Real-time validation hints
+  const getEmailHint = () => {
+    if (!email) return '';
+    if (email.trim().length > 0 && !validateEmail(email)) {
+      return 'Please enter a valid email address (e.g., name@example.com)';
+    }
+    return '';
+  };
+
+  const isFormValid = React.useMemo(() => {
+    const hasFirstName = firstName.trim().length > 0;
+    const hasLastName = lastName.trim().length > 0;
+    const hasEmail = email.trim().length > 0;
+    const emailIsValid = validateEmail(email.trim());
+
+    return hasFirstName && hasLastName && hasEmail && emailIsValid;
+  }, [firstName, lastName, email]);
 
   const scrollToAbout = () => {
     const element = document.getElementById('about');
@@ -517,10 +572,23 @@ export default function HomePage() {
                         placeholder="your@email.com"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        aria-invalid={!!errors.email}
-                        aria-describedby={errors.email ? 'email-error' : undefined}
-                        className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground placeholder:text-secondary/50 focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all"
+                        aria-invalid={!!errors.email || !!getEmailHint()}
+                        aria-describedby={errors.email ? 'email-error' : (getEmailHint() ? 'email-hint' : undefined)}
+                        className={`w-full px-4 py-3 rounded-lg border bg-background text-foreground placeholder:text-secondary/50 focus:outline-none focus:ring-2 focus:border-transparent transition-all ${
+                          getEmailHint()
+                            ? 'border-amber-500 focus:ring-amber-500/20'
+                            : errors.email
+                            ? 'border-red-500 focus:ring-red-500/20'
+                            : 'border-border focus:ring-accent'
+                        }`}
                       />
+                      {/* Real-time validation hint */}
+                      {getEmailHint() && !errors.email && (
+                        <p id="email-hint" className="text-xs text-amber-600 mt-1">
+                          {getEmailHint()}
+                        </p>
+                      )}
+                      {/* Submission error */}
                       {errors.email && (
                         <p id="email-error" className="text-xs text-red-600 mt-1">
                           {errors.email}
@@ -532,10 +600,10 @@ export default function HomePage() {
                     <div className="flex justify-end">
                       <button
                         type="submit"
-                        disabled={!isFormValid}
+                        disabled={!isFormValid || isSubmitting}
                         className="w-full md:w-auto px-8 py-3 rounded-lg bg-foreground text-background font-medium hover:bg-foreground/90 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
                       >
-                        Submit
+                        {isSubmitting ? 'Submitting...' : 'Submit'}
                       </button>
                     </div>
                   </div>
