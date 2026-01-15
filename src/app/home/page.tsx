@@ -360,7 +360,7 @@ export default function HomePage() {
                 <div className="space-y-10">
                   {/* Activity 1: Introduction */}
                   <div
-                    className="relative pl-8 transition-all duration-500"
+                    className="relative pl-8 transition-all duration-500 md:!opacity-100 md:!transform-none md:transition-none"
                     data-activity-index="0"
                     style={{
                       opacity: visibleActivities.has(0) ? 1 : 0.4,
@@ -383,7 +383,7 @@ export default function HomePage() {
 
                   {/* Activity 2: Tool Demos */}
                   <div
-                    className="relative pl-8 transition-all duration-500"
+                    className="relative pl-8 transition-all duration-500 md:!opacity-100 md:!transform-none md:transition-none"
                     data-activity-index="1"
                     style={{
                       opacity: visibleActivities.has(1) ? 1 : 0.4,
@@ -405,7 +405,7 @@ export default function HomePage() {
 
                   {/* Activity 3: Designathon (highlighted) */}
                   <div
-                    className="relative pl-8 transition-all duration-500"
+                    className="relative pl-8 transition-all duration-500 md:!opacity-100 md:!transform-none md:transition-none"
                     data-activity-index="2"
                     style={{
                       opacity: visibleActivities.has(2) ? 1 : 0.4,
@@ -427,7 +427,7 @@ export default function HomePage() {
 
                   {/* Activity 4: Group Reflection */}
                   <div
-                    className="relative pl-8 transition-all duration-500"
+                    className="relative pl-8 transition-all duration-500 md:!opacity-100 md:!transform-none md:transition-none"
                     data-activity-index="3"
                     style={{
                       opacity: visibleActivities.has(3) ? 1 : 0.4,
@@ -449,7 +449,7 @@ export default function HomePage() {
 
                   {/* Activity 5: Closing */}
                   <div
-                    className="relative pl-8 transition-all duration-500"
+                    className="relative pl-8 transition-all duration-500 md:!opacity-100 md:!transform-none md:transition-none"
                     data-activity-index="4"
                     style={{
                       opacity: visibleActivities.has(4) ? 1 : 0.4,
