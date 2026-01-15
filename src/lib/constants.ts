@@ -8,14 +8,16 @@ export const SURVEY_URL = 'https://example.com/survey';
 export const SIGNUP_URL = 'https://example.com/signup';
 export const CONTRIBUTE_URL = 'https://example.com/contribute';
 
-// GitHub Pages configuration
-// Repository name for GitHub Pages deployment
+// Deployment configuration
+// Supports both custom domain and GitHub Pages subdirectory deployment
 const REPO_NAME = 'chi-meetup-site';
 
-// Base path for GitHub Pages (only used in production)
-// In development, this is empty string (runs at root)
-// In production, this is /repo-name for GitHub Pages subdirectory
-export const BASE_PATH = process.env.NODE_ENV === 'production' ? `/${REPO_NAME}` : '';
+// Check if deploying to custom domain
+const isCustomDomain = process.env.NEXT_PUBLIC_CUSTOM_DOMAIN === 'true';
+const isProduction = process.env.NODE_ENV === 'production';
+
+// Base path for assets (empty for custom domain, /repo-name for GitHub Pages subdirectory)
+export const BASE_PATH = isCustomDomain || !isProduction ? '' : `/${REPO_NAME}`;
 
 // Helper function to get asset URLs with correct basePath
 export function getAssetUrl(path: string): string {

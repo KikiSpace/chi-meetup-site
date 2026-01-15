@@ -63,6 +63,13 @@ jobs:
         run: pnpm run build
         env:
           NODE_ENV: production
+          # Set to 'true' for custom domain, 'false' for GitHub Pages subdirectory
+          NEXT_PUBLIC_CUSTOM_DOMAIN: 'true'
+
+      - name: Add CNAME file for custom domain
+        # Only add CNAME when deploying to custom domain
+        if: env.NEXT_PUBLIC_CUSTOM_DOMAIN == 'true'
+        run: echo "www.genai-prototyping.fun" > out/CNAME
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
