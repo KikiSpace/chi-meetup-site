@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { ChevronUp, Menu } from 'lucide-react';
+import { Menu } from 'lucide-react';
 
 interface SectionItem {
   id: string;
@@ -52,11 +52,6 @@ export function FloatingSectionNav() {
     }
     setIsExpanded(false);
     setIsMobileMenuOpen(false);
-  };
-
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    setIsExpanded(false);
   };
 
   return (
@@ -111,33 +106,6 @@ export function FloatingSectionNav() {
               </button>
             );
           })}
-
-          {/* Back to Top Bubble */}
-          <div className="mt-4 pt-4 border-t border-border">
-            <button
-              onClick={scrollToTop}
-              aria-label="Back to top"
-              className="group relative flex items-center justify-end hover:scale-105 transition-transform"
-            >
-              <div
-                className={`
-                  absolute right-full mr-3 px-3 py-1.5 rounded-lg
-                  bg-surface-elevated border border-border
-                  text-xs font-medium text-secondary whitespace-nowrap
-                  transition-all duration-300
-                  ${isExpanded
-                    ? 'opacity-100 translate-x-0'
-                    : 'opacity-0 translate-x-2 pointer-events-none'
-                  }
-                `.trim()}
-              >
-                Back to Top
-              </div>
-              <div className="w-8 h-8 rounded-full bg-surface-elevated border border-border flex items-center justify-center hover:bg-surface hover:border-accent/30 transition-all">
-                <ChevronUp size={14} className="text-secondary group-hover:text-accent transition-colors" />
-              </div>
-            </button>
-          </div>
         </div>
       </div>
 
@@ -165,13 +133,6 @@ export function FloatingSectionNav() {
                   </button>
                 );
               })}
-              <button
-                onClick={scrollToTop}
-                className="w-full px-4 py-3 text-left text-sm font-medium text-secondary hover:bg-surface/50 transition-colors flex items-center gap-2"
-              >
-                <ChevronUp size={14} />
-                Back to Top
-              </button>
             </div>
           </div>
         )}

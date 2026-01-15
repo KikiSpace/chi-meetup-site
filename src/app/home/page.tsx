@@ -8,7 +8,7 @@ import { Callout } from '@/components/Callout';
 import { KeyQuestionsPopover } from '@/components/KeyQuestionsPopover';
 import { PdfModal } from '@/components/PdfModal';
 import { getAssetUrl } from '@/lib/constants';
-import { ExternalLink, Sparkles } from 'lucide-react';
+import { ExternalLink, Sparkles, ChevronDown } from 'lucide-react';
 
 const organizers = [
   {
@@ -86,8 +86,95 @@ const organizers = [
 ];
 
 export default function HomePage() {
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [isPdfModalOpen, setIsPdfModalOpen] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [errors, setErrors] = useState<{ firstName?: string; lastName?: string; email?: string }>({});
+  const [visibleActivities, setVisibleActivities] = useState<Set<number>>(new Set());
+
+  const validateEmail = (email: string) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
+
+  const validateForm = () => {
+    const newErrors: { firstName?: string; lastName?: string; email?: string } = {};
+
+    if (!firstName.trim()) {
+      newErrors.firstName = 'First name is required';
+    }
+
+    if (!lastName.trim()) {
+      newErrors.lastName = 'Last name is required';
+    }
+
+    if (!email.trim()) {
+      newErrors.email = 'Email is required';
+    } else if (!validateEmail(email)) {
+      newErrors.email = 'Please enter a valid email';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (validateForm()) {
+      // Success - show message and clear form
+      setIsSubmitted(true);
+      setFirstName('');
+      setLastName('');
+      setEmail('');
+      setErrors({});
+
+      // Hide success message after 5 seconds
+      setTimeout(() => {
+        setIsSubmitted(false);
+      }, 5000);
+    }
+  };
+
+  const isFormValid = firstName.trim() && lastName.trim() && email.trim() && validateEmail(email);
+
+  const scrollToAbout = () => {
+    const element = document.getElementById('about');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
+  // Intersection Observer for mobile activity animations
+  useEffect(() => {
+    // Only apply on mobile screens
+    const isMobile = window.matchMedia('(max-width: 767px)').matches;
+    if (!isMobile) return;
+
+    const observerOptions = {
+      root: null,
+      rootMargin: '-20% 0px -60% 0px',
+      threshold: 0.1,
+    };
+
+    const observerCallback = (entries: IntersectionObserverEntry[]) => {
+      entries.forEach((entry) => {
+        const activityIndex = parseInt(entry.target.getAttribute('data-activity-index') || '0', 10);
+        if (entry.isIntersecting) {
+          setVisibleActivities((prev) => new Set(prev).add(activityIndex));
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
+
+    // Observe all activity elements
+    const activityElements = document.querySelectorAll('[data-activity-index]');
+    activityElements.forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <div className="relative">
@@ -95,47 +182,64 @@ export default function HomePage() {
       <FloatingSectionNav />
 
       {/* Main Content */}
-      <div className="snap-y snap-mandatory scroll-smooth overflow-y-auto h-screen">
+      <div className="snap-y snap-proximity scroll-smooth overflow-y-auto h-screen">
         {/* Section 1: Overview */}
         <FullScreenSection id="overview" variant="gradient">
-          <div className="text-center max-w-3xl mx-auto">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-surface border border-border mb-6">
-              <Sparkles size={16} className="text-accent" />
-              <span className="text-sm text-secondary font-medium">
-                CHI 2026 • April 13–17 • Barcelona, Spain
-              </span>
+          <div className="relative min-h-[calc(100vh-96px)] flex flex-col items-center justify-center">
+            {/* Hero Content */}
+            <div className="text-center max-w-3xl mx-auto pb-24">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-surface border border-border mb-6">
+                <Sparkles size={16} className="text-accent" />
+                <span className="text-sm text-secondary font-medium">
+                  CHI 2026 • April 13–17 • Barcelona, Spain
+                </span>
+              </div>
+
+              {/* Main Headline */}
+              <h1 className="font-serif text-4xl md:text-6xl font-semibold text-foreground mb-6 leading-tight">
+                Generative Design & Vibe Coding
+              </h1>
+
+              {/* Secondary Subtitle */}
+              <p className="text-lg md:text-2xl text-secondary mb-6 leading-relaxed max-w-2xl mx-auto">
+                Rethinking the{' '}
+                <span className="inline-block px-2 py-0.5 rounded bg-accent/10 text-foreground font-medium">
+                  design–development
+                </span>
+                {' '}divide for UI prototyping
+              </p>
+
+              <p className="text-base md:text-lg text-secondary leading-relaxed max-w-2xl mx-auto mb-6">
+                An interactive CHI 2026 meetup exploring how Gen-AI is reshaping prototyping across
+                Houde & Hill's dimensions of <em>look and feel</em> and <em>implementation</em>.
+                Through hands-on activities and reflection, we'll discuss opportunities, breakdowns,
+                and best practices for human–AI collaboration.
+              </p>
+
+              {/* Workshop Proposal Link */}
+              <button
+                onClick={() => setIsPdfModalOpen(true)}
+                className="inline-flex items-center gap-2 text-sm text-secondary hover:text-accent transition-colors group"
+              >
+                <span className="underline decoration-1 underline-offset-4 group-hover:decoration-accent">
+                  Read our Meetup Proposal
+                </span>
+                <span className="group-hover:translate-x-0.5 transition-transform">→</span>
+              </button>
             </div>
 
-            {/* Main Headline */}
-            <h1 className="font-serif text-4xl md:text-6xl font-semibold text-foreground mb-6 leading-tight">
-              Generative Design & Vibe Coding
-            </h1>
-
-            {/* Secondary Subtitle */}
-            <p className="text-lg md:text-2xl text-secondary mb-6 leading-relaxed max-w-2xl mx-auto">
-              Rethinking the{' '}
-              <span className="inline-block px-2 py-0.5 rounded bg-accent/10 text-foreground font-medium">
-                design–development
-              </span>
-              {' '}divide for UI prototyping
-            </p>
-
-            <p className="text-base md:text-lg text-secondary leading-relaxed max-w-2xl mx-auto mb-6">
-              An interactive CHI 2026 meetup exploring how Gen-AI is reshaping prototyping across
-              Houde & Hill's dimensions of <em>look and feel</em> and <em>implementation</em>.
-              Through hands-on activities and reflection, we'll discuss opportunities, breakdowns,
-              and best practices for human–AI collaboration.
-            </p>
-
-            {/* Workshop Proposal Link */}
+            {/* Scroll Helper - Pinned at bottom */}
             <button
-              onClick={() => setIsPdfModalOpen(true)}
-              className="inline-flex items-center gap-2 text-sm text-secondary hover:text-accent transition-colors group"
+              onClick={scrollToAbout}
+              className="absolute left-1/2 -translate-x-1/2 z-50 inline-flex flex-col items-center gap-2 text-sm text-secondary/60 hover:text-secondary transition-colors group"
+              style={{ bottom: 'calc(env(safe-area-inset-bottom, 0px) + 24px)' }}
+              aria-label="Scroll to About section"
             >
-              <span className="underline decoration-1 underline-offset-4 group-hover:decoration-accent">
-                Read our Meetup Proposal
-              </span>
-              <span className="group-hover:translate-x-0.5 transition-transform">→</span>
+              <span className="text-xs">Scroll to learn more</span>
+              <ChevronDown
+                size={20}
+                className="animate-bounce-subtle motion-reduce:animate-none"
+              />
             </button>
           </div>
         </FullScreenSection>
@@ -183,50 +287,145 @@ export default function HomePage() {
               </p>
             </div>
 
-            {/* 90-Minute Format */}
-            <Callout variant="accent">
-              <div className="flex items-center justify-center gap-3 mb-4 flex-wrap">
-                <h3 className="font-semibold text-xl text-foreground">
+            {/* 90-Minute Format - Vertical Timeline */}
+            <div className="max-w-3xl mx-auto pb-24">
+              <div className="flex items-center justify-center gap-3 mb-12 flex-wrap">
+                <h3 className="font-semibold text-2xl text-foreground">
                   90-Minute Designathon Format
                 </h3>
                 <KeyQuestionsPopover />
               </div>
-              <div className="grid md:grid-cols-4 gap-6">
-                <div className="text-center">
-                  <div className="w-12 h-12 rounded-full bg-surface border border-border flex items-center justify-center mx-auto mb-3">
-                    <span className="font-semibold text-foreground">1</span>
+
+              {/* Vertical Timeline */}
+              <div className="relative">
+                {/* Timeline spine (vertical line) */}
+                <div className="absolute left-[7px] top-2 bottom-2 w-px bg-border" aria-hidden="true" />
+
+                {/* Timeline items */}
+                <div className="space-y-10">
+                  {/* Activity 1: Introduction */}
+                  <div
+                    className="relative pl-8 transition-all duration-500"
+                    data-activity-index="0"
+                    style={{
+                      opacity: visibleActivities.has(0) ? 1 : 0.4,
+                      transform: visibleActivities.has(0) ? 'translateY(0)' : 'translateY(8px)',
+                    }}
+                  >
+                    {/* Dot marker */}
+                    <div className="absolute left-0 top-1 w-4 h-4 rounded-full bg-background border-2 border-border" aria-hidden="true" />
+
+                    <div className="flex items-baseline justify-between mb-2 flex-wrap gap-2">
+                      <h4 className="font-semibold text-lg text-foreground">Introduction</h4>
+                      <span className="inline-block px-2 py-0.5 rounded text-xs font-medium bg-surface border border-border text-secondary">
+                        10 min
+                      </span>
+                    </div>
+                    <p className="text-sm text-secondary leading-relaxed">
+                      Set context on how generative AI is reshaping prototyping across design and development, and align everyone on the session purpose.
+                    </p>
                   </div>
-                  <p className="font-medium text-foreground mb-1">Intro</p>
-                  <p className="text-sm text-secondary">10 min</p>
-                </div>
-                <div className="text-center">
-                  <div className="w-12 h-12 rounded-full bg-surface border border-border flex items-center justify-center mx-auto mb-3">
-                    <span className="font-semibold text-foreground">2</span>
+
+                  {/* Activity 2: Tool Demos */}
+                  <div
+                    className="relative pl-8 transition-all duration-500"
+                    data-activity-index="1"
+                    style={{
+                      opacity: visibleActivities.has(1) ? 1 : 0.4,
+                      transform: visibleActivities.has(1) ? 'translateY(0)' : 'translateY(8px)',
+                    }}
+                  >
+                    <div className="absolute left-0 top-1 w-4 h-4 rounded-full bg-background border-2 border-border" aria-hidden="true" />
+
+                    <div className="flex items-baseline justify-between mb-2 flex-wrap gap-2">
+                      <h4 className="font-semibold text-lg text-foreground">Tool Demos</h4>
+                      <span className="inline-block px-2 py-0.5 rounded text-xs font-medium bg-surface border border-border text-secondary">
+                        15 min
+                      </span>
+                    </div>
+                    <p className="text-sm text-secondary leading-relaxed">
+                      Inspire participants with quick demos of browser-based generative design and vibe-coding tools to spark ideas for the hands-on activity.
+                    </p>
                   </div>
-                  <p className="font-medium text-foreground mb-1">Tool Demos</p>
-                  <p className="text-sm text-secondary">15 min</p>
-                </div>
-                <div className="text-center">
-                  <div className="w-12 h-12 rounded-full bg-accent/10 border border-accent/20 flex items-center justify-center mx-auto mb-3">
-                    <span className="font-semibold text-accent">3</span>
+
+                  {/* Activity 3: Designathon (highlighted) */}
+                  <div
+                    className="relative pl-8 transition-all duration-500"
+                    data-activity-index="2"
+                    style={{
+                      opacity: visibleActivities.has(2) ? 1 : 0.4,
+                      transform: visibleActivities.has(2) ? 'translateY(0)' : 'translateY(8px)',
+                    }}
+                  >
+                    <div className="absolute left-0 top-1 w-4 h-4 rounded-full bg-accent border-2 border-accent" aria-hidden="true" />
+
+                    <div className="flex items-baseline justify-between mb-2 flex-wrap gap-2">
+                      <h4 className="font-semibold text-lg text-accent">Designathon</h4>
+                      <span className="inline-block px-2 py-0.5 rounded text-xs font-medium bg-accent/10 border border-accent/20 text-accent">
+                        40 min
+                      </span>
+                    </div>
+                    <p className="text-sm text-secondary leading-relaxed">
+                      Collaboratively prototype solutions to a shared design brief using Gen-AI tools, focusing on both "look & feel" and implementation.
+                    </p>
                   </div>
-                  <p className="font-medium text-foreground mb-1">Designathon</p>
-                  <p className="text-sm text-secondary">40 min</p>
-                </div>
-                <div className="text-center">
-                  <div className="w-12 h-12 rounded-full bg-surface border border-border flex items-center justify-center mx-auto mb-3">
-                    <span className="font-semibold text-foreground">4</span>
+
+                  {/* Activity 4: Group Reflection */}
+                  <div
+                    className="relative pl-8 transition-all duration-500"
+                    data-activity-index="3"
+                    style={{
+                      opacity: visibleActivities.has(3) ? 1 : 0.4,
+                      transform: visibleActivities.has(3) ? 'translateY(0)' : 'translateY(8px)',
+                    }}
+                  >
+                    <div className="absolute left-0 top-1 w-4 h-4 rounded-full bg-background border-2 border-border" aria-hidden="true" />
+
+                    <div className="flex items-baseline justify-between mb-2 flex-wrap gap-2">
+                      <h4 className="font-semibold text-lg text-foreground">Group Reflection</h4>
+                      <span className="inline-block px-2 py-0.5 rounded text-xs font-medium bg-surface border border-border text-secondary">
+                        20 min
+                      </span>
+                    </div>
+                    <p className="text-sm text-secondary leading-relaxed">
+                      Reflect together on opportunities, breakdowns, and best practices using Houde & Hill's framework as a shared vocabulary.
+                    </p>
                   </div>
-                  <p className="font-medium text-foreground mb-1">Reflection</p>
-                  <p className="text-sm text-secondary">20 min</p>
+
+                  {/* Activity 5: Closing */}
+                  <div
+                    className="relative pl-8 transition-all duration-500"
+                    data-activity-index="4"
+                    style={{
+                      opacity: visibleActivities.has(4) ? 1 : 0.4,
+                      transform: visibleActivities.has(4) ? 'translateY(0)' : 'translateY(8px)',
+                    }}
+                  >
+                    <div className="absolute left-0 top-1 w-4 h-4 rounded-full bg-background border-2 border-border" aria-hidden="true" />
+
+                    <div className="flex items-baseline justify-between mb-2 flex-wrap gap-2">
+                      <h4 className="font-semibold text-lg text-foreground">Closing</h4>
+                      <span className="inline-block px-2 py-0.5 rounded text-xs font-medium bg-surface border border-border text-secondary">
+                        5 min
+                      </span>
+                    </div>
+                    <p className="text-sm text-secondary leading-relaxed">
+                      Wrap up key takeaways and highlight how insights can inform future research and practice in AI-assisted prototyping.
+                    </p>
+                  </div>
                 </div>
               </div>
-            </Callout>
+
+              {/* Editorial note */}
+              <p className="text-sm text-secondary/70 text-center mt-16 leading-relaxed">
+                More details for our event will post while approaching the event..
+              </p>
+            </div>
           </div>
         </FullScreenSection>
 
         {/* Section 3: Participate */}
-        <FullScreenSection id="participate" variant="surface">
+        <FullScreenSection id="participate" variant="surface" align="start">
           <div className="max-w-2xl mx-auto text-center">
             {/* Lead-in */}
             <div className="inline-block mb-8">
@@ -244,26 +443,108 @@ export default function HomePage() {
 
             <p className="text-base md:text-lg text-secondary leading-relaxed mb-10">
               Pre-event surveys and RSVP will open in mid-February. If you're interested in
-              participating, please leave your email—we'll keep you updated about the event
+              participating, please share your details—we'll keep you updated about the event
               and survey to support better planning.
             </p>
 
-            {/* Email Interest Field */}
-            <div className="max-w-md mx-auto">
-              <label htmlFor="email-interest" className="block text-sm font-medium text-foreground mb-2">
-                Get updates
-              </label>
-              <input
-                id="email-interest"
-                type="email"
-                placeholder="your@email.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground placeholder:text-secondary/50 focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all"
-              />
-              <p className="text-xs text-secondary mt-2">
-                We'll only email you about this meetup.
-              </p>
+            {/* Signup Form */}
+            <div className="max-w-4xl mx-auto">
+              {isSubmitted ? (
+                <div className="text-center py-6">
+                  <p className="text-lg font-medium text-accent">
+                    Thanks! We'll keep you updated.
+                  </p>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  {/* Row 1: First Name + Last Name (side by side on desktop, stacked on mobile) */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* First Name */}
+                    <div>
+                      <label htmlFor="first-name" className="block text-sm font-medium text-foreground mb-2">
+                        First Name
+                      </label>
+                      <input
+                        id="first-name"
+                        type="text"
+                        placeholder="First name"
+                        value={firstName}
+                        onChange={(e) => setFirstName(e.target.value)}
+                        aria-invalid={!!errors.firstName}
+                        aria-describedby={errors.firstName ? 'first-name-error' : undefined}
+                        className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground placeholder:text-secondary/50 focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all"
+                      />
+                      {errors.firstName && (
+                        <p id="first-name-error" className="text-xs text-red-600 mt-1">
+                          {errors.firstName}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Last Name */}
+                    <div>
+                      <label htmlFor="last-name" className="block text-sm font-medium text-foreground mb-2">
+                        Last Name
+                      </label>
+                      <input
+                        id="last-name"
+                        type="text"
+                        placeholder="Last name"
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
+                        aria-invalid={!!errors.lastName}
+                        aria-describedby={errors.lastName ? 'last-name-error' : undefined}
+                        className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground placeholder:text-secondary/50 focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all"
+                      />
+                      {errors.lastName && (
+                        <p id="last-name-error" className="text-xs text-red-600 mt-1">
+                          {errors.lastName}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Row 2: Email + Submit Button */}
+                  <div className="space-y-4">
+                    {/* Email */}
+                    <div>
+                      <label htmlFor="email" className="block text-sm font-medium text-foreground mb-2">
+                        Email
+                      </label>
+                      <input
+                        id="email"
+                        type="email"
+                        placeholder="your@email.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        aria-invalid={!!errors.email}
+                        aria-describedby={errors.email ? 'email-error' : undefined}
+                        className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground placeholder:text-secondary/50 focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all"
+                      />
+                      {errors.email && (
+                        <p id="email-error" className="text-xs text-red-600 mt-1">
+                          {errors.email}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Submit Button */}
+                    <div className="flex justify-end">
+                      <button
+                        type="submit"
+                        disabled={!isFormValid}
+                        className="w-full md:w-auto px-8 py-3 rounded-lg bg-foreground text-background font-medium hover:bg-foreground/90 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                      >
+                        Submit
+                      </button>
+                    </div>
+                  </div>
+
+                  <p className="text-xs text-secondary text-center">
+                    We'll only email you about this meetup.
+                  </p>
+                </form>
+              )}
             </div>
           </div>
         </FullScreenSection>
@@ -275,8 +556,7 @@ export default function HomePage() {
               Organizers
             </h2>
             <p className="text-lg text-secondary mb-12 text-center max-w-2xl mx-auto">
-              An international team of researchers and practitioners from Santa Clara University,
-              Stanford, Adobe, UCLA, Microsoft Research, and beyond.
+              An international team of researchers and practitioners from Santa Clara University, Stanford University, Adobe Research, UCLA, Microsoft Research, University of Cambridge, University College London, Trent AI, UNIST, and the University of Michigan.
             </p>
 
             <div className="space-y-8 mb-16 max-w-5xl mx-auto">
@@ -289,10 +569,17 @@ export default function HomePage() {
               <h3 className="font-serif text-2xl font-bold text-foreground mb-6 text-center">
                 Get in Touch
               </h3>
-              <p className="text-center text-secondary mb-8 max-w-2xl mx-auto">
-                Have questions, ideas, or want to contribute a tool demo? We'd love to hear from you.
-                Reach out to any of the organizers directly.
-              </p>
+              <div className="text-center max-w-2xl mx-auto">
+                <p className="text-sm font-medium text-secondary mb-3">
+                  Have questions or want to contribute?
+                </p>
+                <a
+                  href="mailto:chi.genai.prototyping@gmail.com"
+                  className="inline-block text-lg md:text-xl font-medium text-foreground hover:text-accent transition-colors underline decoration-1 underline-offset-4 hover:decoration-accent"
+                >
+                  chi.genai.prototyping@gmail.com
+                </a>
+              </div>
             </div>
           </div>
         </FullScreenSection>
