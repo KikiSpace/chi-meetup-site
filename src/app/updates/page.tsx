@@ -4,17 +4,32 @@ import { Section } from '@/components/Section';
 import { Calendar } from 'lucide-react';
 
 const updates = [
-  {
+    {
+      date: "2026-01-15",
+      title: "Call for Tool Demonstrations",
+      content: (
+        <>
+          Are you building generative design or vibe-coding tools? We’re seeking short (5-min) tool
+          demonstrations for our 15-minute demo session. We’re especially interested in browser-based
+          tools like V0.app, Bolt.new, Lovable, or novel approaches to AI-assisted prototyping. Feel free
+          to share your workflows, prompting strategies, or experimental platforms. To propose a demo,
+          contact us at{" "}
+          <a
+            href="mailto:chi.genai.prototyping@gmail.com"
+            className="font-medium underline underline-offset-4 hover:opacity-80"
+          >
+            chi.genai.prototyping@gmail.com
+          </a>
+          .
+        </>
+      ),
+      type: "call" as const,
+    }, 
+   {
     date: '2026-01-12',
     title: 'Website Launched & Registration Details',
     content: `We're excited to announce the launch of our meetup website! `,
     type: 'announcement' as const,
-  },
-  {
-    date: '2026-01-08',
-    title: 'Call for Tool Demonstrations',
-    content: `Are you building generative design or vibe-coding tools? We're seeking short (5-min) tool demonstrations for our 15-minute demo session. We're interested in browser-based tools like V0.app, Bolt.new, Lovable, or novel approaches to AI-assisted prototyping. Share your workflows, prompting strategies, or experimental platforms. Contact us via the Participate page to propose your demo.`,
-    type: 'call' as const,
   },
   {
     date: '2025-11-30',
