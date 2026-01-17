@@ -40,7 +40,7 @@ const organizers = [
     role: 'Member of Technical Staff',
     affiliation: 'Trent AI, UK',
     email: 'ian@trent.ai',
-    photo: 'https://media.licdn.com/dms/image/v2/C5603AQEoI6Be3SVduA/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1657194676693?e=1770249600&v=beta&t=OhACm9XdfqmzJAO3Nna8uv9kkEehTLJnUNfdcFgT-rU',
+    photo: 'https://media.licdn.com/dms/image/v2/C5603AQEoI6Be3SVduA/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1657194676693?e=1770249600&v=beta&t=vpgBBJOVgkFqCe7t3zhMZksVipxl5zwMw_FNwKUEkds',
     bio: 'Member of Technical Staff at Trent AI; designs and develops UX for creating/steering AI agents for secure code and processes; focuses on generative UX while addressing risks of vibe coding and modern dev workflows.',
   },
   {
@@ -64,7 +64,7 @@ const organizers = [
     role: 'PhD Student',
     affiliation: 'University of Michigan, USA',
     email: 'pimenova@umich.edu',
-    photo: 'https://lh3.googleusercontent.com/a-/ALV-UjUyipYh4-Ybrga-vTtWdoWxpdt2u-BMl5R7NKuk5h-ST6ggBoyr=s240-p-k-rw-no',
+    photo: 'https://media.licdn.com/dms/image/v2/D4E03AQGWNdqCMUwerw/profile-displayphoto-scale_200_200/B4EZmneu.9KcAY-/0/1759451476504?e=1770249600&v=beta&t=vc83adBXem5MW5VHHpw6dkeXgw9TulCxvQVpqT0CM_8',
     bio: 'PhD student at the University of Michigan School of Information; research on human factors of software engineering, focusing on AI tools for accessibility and developer productivity in workplace environments.',
   },
   {
@@ -497,9 +497,7 @@ export default function HomePage() {
             </p>
 
             <p className="text-base md:text-lg text-secondary leading-relaxed mb-10">
-              Pre-event surveys and RSVP will open in mid-February. If you're interested in
-              participating, please share your details—we'll keep you updated about the event
-              and survey to support better planning.
+              Pre-event surveys and the interest sign-up form will open in mid-February. If you’d like updates, please share your details—we’ll notify you when the survey is live and share event information to support planning.
             </p>
 
             {/* Signup Form */}
